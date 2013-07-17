@@ -1,0 +1,158 @@
+//Demo From Scratch
+//Jason + Anna
+//These includes include other files for programming.  
+//These files tell the arduino how to handle functions that involve a servo.  
+#include <Servo.h>
+
+
+
+
+
+
+
+
+//The following are variables.  
+
+//int stands for integer.  The name that follows is the name of the variable.  
+//These variables can hold integer values.  
+int inversedistance;
+int beat1time;
+int beat2time;
+int beat3time;
+int beat4time;
+int beataveragetime;
+//The const before the int means that the variable is a constant
+//These values will not change while the program is running.
+const int FWDLEFT = 2;  //These Numbers are the numbers of the pins on the arduino board that connect to the motors.  
+const int REVLEFT = 3;  //For Example, sending a signal to REVLEFT (pin 3) will cause the Left motor to move in reverse.  
+const int FWDRT = 7;    //It is not necessary to declare these constants if you remember the pins.  But since that would be difficult the variables can stand in place for the pin numbers later.  
+const int REVRT = 8;
+const int RANGEPIN = 1;
+//A boolean variable is either true or false;  The value can be declared initially with =
+//The robot will not start dancing until code instructs it to do so.  
+boolean IsDancing = false;
+int BeatsDanced = 0;
+boolean lastButton = false;
+boolean motorOn = false;
+//A long is also an integer but it is for larger numbers.  
+//Since time is measured in milliseconds, these values can become quite large.  Therefore long is more appropriate than int.  
+long startTime;
+//Servo is for use with Servo Motors.  These will move to a particular position.  
+Servo ForwardServo;
+Servo BackwardServo;
+Servo EyeServo;
+//This is a function declaration.  void means that the variable has no parameters
+//It is neither true, false, a number, or a letter.  It is nothing, really. 
+void DanceFunction (void);
+
+int RED = 4;
+int BLUE = 10;
+
+
+//This setup function is required for use with arduino.  
+//Anything that follows in the squiggly brackets {} will be performed when the robot is first turned on.  
+void setup(void) 
+{
+  Serial.begin(9600);
+  ForwardServo.attach(44);
+  BackwardServo.attach(45);
+  EyeServo.attach(46);
+  
+  
+  //lets motors work
+  pinMode (5, OUTPUT);
+  digitalWrite (5, HIGH);
+  pinMode (6, OUTPUT);
+  digitalWrite (6, HIGH);
+  delay (1000);
+  
+  pinMode (9, OUTPUT);
+  pinMode (10, OUTPUT);
+}
+
+
+
+
+      
+
+
+
+
+//This loop function is also required for use with arduino
+//After setup is performed, loop will be performed.  
+//The loop function will repeat over and over again until the robot is turned off.  
+
+void loop()
+{
+  if (analogRead(RANGEPIN) >= 300) //IR sensor
+    {
+       digitalWrite(FWDLEFT, LOW);
+       digitalWrite(FWDRT, LOW);
+       if (millis() % 2) 
+       {
+         digitalWrite(REVLEFT, HIGH);
+         digitalWrite(REVRT, HIGH);
+         delay(200);
+         digitalWrite(REVLEFT, LOW);
+         delay(1000);
+         digitalWrite(REVRT, LOW);
+       }
+       else 
+       {
+         digitalWrite(REVLEFT, HIGH);
+         digitalWrite(REVRT, HIGH);
+         delay(200);
+         digitalWrite(REVRT, LOW);
+         delay(1000);
+         digitalWrite(REVLEFT, LOW);
+       
+       }
+       
+    }
+  
+int lphoto = analogRead(2);
+int rphoto = analogRead(3);
+
+
+  lphoto = map(lphoto, 0, 1023, 0, 255);
+  rphoto = map(rphoto, 0, 1023, 0, 255);
+  ForwardServo.writeMicroseconds(2000); 
+  BackwardServo.writeMicroseconds(2000);
+  analogWrite(FWDRT, lphoto);
+  analogWrite(FWDLEFT,rphoto);
+       
+  
+  
+
+  
+  
+
+  
+  inversedistance = analogRead(RANGEPIN);
+  
+ if (inversedistance >= 230)
+ {
+   ForwardServo.writeMicroseconds(1000); //tilts head backward
+   BackwardServo.writeMicroseconds(1000);
+ }
+
+ 
+ 
+ 
+  if (digitalRead(28) == LOW || digitalRead(29) == LOW || digitalRead(31) == LOW || digitalRead(30) == LOW)
+  
+  {
+    digitalWrite(10, HIGH);
+    digitalWrite(9, HIGH);
+    EyeServo.writeMicroseconds(1900);
+    delay(200);
+    EyeServo.writeMicroseconds(1100);
+    delay(200);
+    EyeServo.writeMicroseconds(1900);
+    delay(200);
+    EyeServo.writeMicroseconds(1100);
+    digitalWrite(10, LOW);
+    digitalWrite(9, LOW);
+  }
+}
+  
